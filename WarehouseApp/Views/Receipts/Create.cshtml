@@ -1,0 +1,65 @@
+﻿@model WarehouseApp.Models.Receipt
+
+@{
+    ViewData["Title"] = "Создать документ поступления";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group mb-3">
+        <label asp-for="Number" class="form-label"></label>
+        <input asp-for="Number" class="form-control" />
+        <span asp-validation-for="Number" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Date" class="form-label"></label>
+        <input asp-for="Date" type="date" class="form-control" />
+        <span asp-validation-for="Date" class="text-danger"></span>
+    </div>
+
+    <h4>Ресурсы поступления</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ресурс</th>
+                <th>Единица измерения</th>
+                <th>Количество</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Items.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <select asp-for="Items[@i].ResourceId" class="form-select"
+                                asp-items="@(new SelectList(ViewBag.Resources, "Id", "Name"))">
+                            <option value="">--Выберите ресурс--</option>
+                        </select>
+                        <span asp-validation-for="Items[@i].ResourceId" class="text-danger"></span>
+                    </td>
+                    <td>
+                        <select asp-for="Items[@i].UnitId" class="form-select"
+                                asp-items="@(new SelectList(ViewBag.Units, "Id", "Name"))">
+                            <option value="">--Выберите единицу--</option>
+                        </select>
+                        <span asp-validation-for="Items[@i].UnitId" class="text-danger"></span>
+                    </td>
+                    <td>
+                        <input asp-for="Items[@i].Quantity" class="form-control" />
+                        <span asp-validation-for="Items[@i].Quantity" class="text-danger"></span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
